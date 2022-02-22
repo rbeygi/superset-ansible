@@ -1,0 +1,14 @@
+- name: Install superset
+  hosts: test
+  become: true
+  vars:
+    db_user: miare
+    db_password: miare
+    db_name: miare    
+  tasks:
+    #- name: install postgresql
+    #  import_tasks: ./pgsql/install-postgresql.yml
+    #- name: install nginx
+    #  import_tasks: ./nginx/install-nginx.yml
+    - name: install superset
+      import_tasks: ./superset/install-superset.yml

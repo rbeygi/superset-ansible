@@ -1,0 +1,52 @@
+---
+    - name: install postgres on RHEL based distros
+      yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+        - postgresql
+        - postgresql-server
+
+    - name: "Find out if PostgreSQL is initialized"
+      stat:
+        path: /var/lib/pgsql/data/pg_hba.conf
+      register: postgres_data
+
+    - name: Initialize PostgreSQL
+      shell: postgresql-setup initdb
+      when: not postgres_data.stat.exists
+
+    - name: Start and enable postgres services
+      service: 
+        name: postgresql
+        state: started 
+        enabled: yes
+    - name: Install packages
+      yum : 
+        name: python-psycopg2
+        state: present
+
+    - name: Create first database
+      postgresql_db:
+        state: present
+        name: "{{ db_name }}"
+      become: yes
+      become_user: postgres
+      
+    - name: Create db user
+      postgresql_user:
+        state: present
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+      become: yes
+      become_user: postgres
+
+    - name: "Grant db user access to app db"
+      postgresql_privs:
+        type: database
+        database: "{{ db_name }}"
+        roles: "{{ db_user }}"
+        grant_option: no
+        privs: all
+      become: yes
+      become_user: postgres

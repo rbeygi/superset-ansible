@@ -1,0 +1,79 @@
+---
+  # - name: install dependencies
+  #   yum:
+  #     name: "{{ packages }}"
+  #   vars:
+  #     packages:
+  #       - gcc 
+  #       - gcc-c++ 
+  #       - libffi-devel
+  #       - python3
+  #       - python-wheel 
+  #       - openssl-devel
+  #       - cyrus-sasl-devel
+  #       - openldap-devel
+
+  # - name: change python version
+  #   shell: ln -fs /usr/bin/python3.6 /usr/bin/python
+
+  # - name: update pip
+  #   pip:
+  #     name: pip
+  #     extra_args: --upgrade
+  #     executable: pip3
+
+  # - name: install Virtual Environment with pip
+  #   pip:
+  #     name: virtualenv
+  #     state: latest
+  #     executable: pip3
+  # - name: install python postgresql mosule
+  #   pip:
+  #     name: psycopg2
+  #     state: latest
+  #     executable: pip3
+
+  # - name: active and create virtual enviroment
+  #   shell: 'python -m venv venv ; . venv/bin/activate'
+
+  # - name: install Apache Superset with pip
+  #   pip:
+  #     name: apache-superset
+  #     state: latest
+  #     executable: pip3
+
+  # - name: copy postgresql config file to superset
+  #   lineinfile:
+  #     path: /usr/local/lib/python3.6/site-packages/superset/config.py
+  #     line: SQLALCHEMY_DATABASE_URI = 'postgresql://miare:miare@localhost/miare'
+  
+  - name: supersqt initialize the database
+    shell: superset db upgrade
+  - name: flask command
+    shell: export FLASK_APP=superset
+
+  - name: Splunk Start
+    shell: |
+      expect "Username [admin]: "
+      send "\n"
+      expect " User first name [admin]: "
+      send "admin\n"
+      expect "User last name [user]: "
+      send "admin\n"
+      expect "Password: "
+      send "QWEqwe123\n"
+      expect "Repeat for confirmation: "
+      send "QWEqwe123\n"
+      exit 0
+    args:
+      executable: flask fab create-admin
+    
+  - name: INSTALL SUPERSET BUILT-IN EXAMPLES
+    shell: superset load_examples
+  - name: INITIALIZE THE SUPERSET
+    shell: superset init
+  - name: RUN SUPERSET
+    shell: superset run -p 8080 --with-threads --reload --debugger
+
+
+    flask-appbuilder
