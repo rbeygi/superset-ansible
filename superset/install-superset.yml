@@ -1,51 +1,51 @@
 ---
-  # - name: install dependencies
-  #   yum:
-  #     name: "{{ packages }}"
-  #   vars:
-  #     packages:
-  #       - gcc 
-  #       - gcc-c++ 
-  #       - libffi-devel
-  #       - python3
-  #       - python-wheel 
-  #       - openssl-devel
-  #       - cyrus-sasl-devel
-  #       - openldap-devel
+  - name: install dependencies
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+        - gcc 
+        - gcc-c++ 
+        - libffi-devel
+        - python3
+        - python-wheel 
+        - openssl-devel
+        - cyrus-sasl-devel
+        - openldap-devel
 
-  # - name: change python version
-  #   shell: ln -fs /usr/bin/python3.6 /usr/bin/python
+  - name: change python version
+    shell: ln -fs /usr/bin/python3.6 /usr/bin/python
 
-  # - name: update pip
-  #   pip:
-  #     name: pip
-  #     extra_args: --upgrade
-  #     executable: pip3
+  - name: update pip
+    pip:
+      name: pip
+      extra_args: --upgrade
+      executable: pip3
 
-  # - name: install Virtual Environment with pip
-  #   pip:
-  #     name: virtualenv
-  #     state: latest
-  #     executable: pip3
-  # - name: install python postgresql mosule
-  #   pip:
-  #     name: psycopg2
-  #     state: latest
-  #     executable: pip3
+  - name: install Virtual Environment with pip
+    pip:
+      name: virtualenv
+      state: latest
+      executable: pip3
+  - name: install python postgresql mosule
+    pip:
+      name: psycopg2
+      state: latest
+      executable: pip3
 
-  # - name: active and create virtual enviroment
-  #   shell: 'python -m venv venv ; . venv/bin/activate'
+  - name: active and create virtual enviroment
+    shell: 'python -m venv venv ; . venv/bin/activate'
 
-  # - name: install Apache Superset with pip
-  #   pip:
-  #     name: apache-superset
-  #     state: latest
-  #     executable: pip3
+  - name: install Apache Superset with pip
+    pip:
+      name: apache-superset
+      state: latest
+      executable: pip3
 
-  # - name: copy postgresql config file to superset
-  #   lineinfile:
-  #     path: /usr/local/lib/python3.6/site-packages/superset/config.py
-  #     line: SQLALCHEMY_DATABASE_URI = 'postgresql://miare:miare@localhost/miare'
+  - name: copy postgresql config file to superset
+    lineinfile:
+      path: /usr/local/lib/python3.6/site-packages/superset/config.py
+      line: SQLALCHEMY_DATABASE_URI = 'postgresql://miare:miare@localhost/miare'
   
   - name: supersqt initialize the database
     shell: superset db upgrade
